@@ -7,6 +7,10 @@ class Rectangle:
         return f"Width: {self._width}, height: {self._height}"
 
     @property
+    def area(self):
+        return self._width * self._height
+
+    @property
     def width(self):
         return self._width
 
@@ -21,3 +25,29 @@ class Rectangle:
     @height.setter
     def height(self, value):
         self._height = value
+
+
+# This is a bad class - it breaks the LSP because use_it will no longer provide the correct output
+class Square(Rectangle):
+    def __init__(self, size):
+        Rectangle.__init__(self, size, size)
+
+    @Rectangle.width.setter
+    def width(self, value):
+        self._width = self._height = value
+
+    @Rectangle.height.setter
+    def height(self, value):
+        self._width = self._height = value
+
+
+def use_it(rc):
+
+    w = rc.width
+    rc.height = 10
+    expected = int(w * 10)
+    print(f"Expected an area of {expected} but got {rc.area}")
+
+
+rc = Rectangle(2, 3)
+use_it(rc)
